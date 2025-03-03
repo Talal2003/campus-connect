@@ -1,0 +1,21 @@
+ut-campus-connect/
+├── app/
+│   ├── api/
+│   │   ├── items/
+│   │   │   └── route.js
+│   │   ├── found/
+│   │   │   └── page.js
+│   │   ├── lost/
+│   │   │   └── page.js
+│   │   ├── report/
+│   │   │   ├── found/
+│   │   │   │   └── page.js
+│   │   │   └── lost/
+│   │   │   │   └── page.js
+│   │   ├── layout.js
+│   │   └── page.js
+│   │   └── globals.css
+│   ├── components/
+│   │   ├── Navbar.js
+│   ├── public/
+│   │   └── images/
