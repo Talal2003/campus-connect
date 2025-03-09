@@ -1,4 +1,4 @@
-ut-campus-connect/
+ut-lost-found/
 ├── app/
 │   ├── api/
 │   │   ├── items/
@@ -11,11 +11,20 @@ ut-campus-connect/
 │   │   │   ├── found/
 │   │   │   │   └── page.js
 │   │   │   └── lost/
-│   │   │   │   └── page.js
+│   │   │   └── page.js
+│   │   ├── track/
+│   │   │   └── page.js
 │   │   ├── layout.js
 │   │   └── page.js
-│   │   └── globals.css
 │   ├── components/
+│   │   ├── ItemCard.js
+│   │   ├── ItemForm.js
 │   │   ├── Navbar.js
+│   │   ├── SearchFilters.js
+│   │   └── StatusBadge.js
+│   ├── lib/
+│   │   └── db.js
 │   ├── public/
 │   │   └── images/
+│   └── styles/
+│       └── globals.css 
