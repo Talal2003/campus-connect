@@ -5,91 +5,30 @@ import Link from 'next/link';
 import ItemCard from '../../components/ItemCard';
 import SearchBox from '../../components/SearchBox';
 
-// Mock data for lost items
-const mockLostItems = [
-  {
-    id: 1,
-    type: 'lost',
-    title: 'Blue Backpack',
-    category: 'accessories',
-    description: 'Blue Jansport backpack with a rocket keychain',
-    location: 'Student Union',
-    date: '2023-10-15',
-    status: 'lost',
-    imageUrl: null
-  },
-  {
-    id: 2,
-    type: 'lost',
-    title: 'MacBook Pro',
-    category: 'electronics',
-    description: 'Silver MacBook Pro 13" with stickers on the cover',
-    location: 'Carlson Library, 2nd floor',
-    date: '2023-10-18',
-    status: 'found',
-    imageUrl: null
-  },
-  {
-    id: 3,
-    type: 'lost',
-    title: 'Student ID Card',
-    category: 'id-cards',
-    description: 'UT Rocket ID card',
-    location: 'Engineering Building',
-    date: '2023-10-20',
-    status: 'delivered',
-    imageUrl: null
-  },
-  {
-    id: 4,
-    type: 'lost',
-    title: 'Water Bottle',
-    category: 'other',
-    description: 'Blue Hydro Flask with UT stickers',
-    location: 'Recreation Center',
-    date: '2023-10-22',
-    status: 'lost',
-    imageUrl: null
-  },
-  {
-    id: 5,
-    type: 'lost',
-    title: 'Textbook - Calculus II',
-    category: 'books',
-    description: 'Calculus II textbook with yellow highlights',
-    location: 'Mathematics Building',
-    date: '2023-10-25',
-    status: 'pending',
-    imageUrl: null
-  },
-  {
-    id: 6,
-    type: 'lost',
-    title: 'AirPods Pro',
-    category: 'electronics',
-    description: 'White AirPods Pro in a black case',
-    location: 'Student Union Food Court',
-    date: '2023-10-27',
-    status: 'lost',
-    imageUrl: null
-  }
-];
-
 export default function LostItemsPage() {
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   
   useEffect(() => {
-    // In a real app, this would be an API call
-    // For now, we'll use the mock data
+    // Fetch real data from the API
     const fetchItems = async () => {
       try {
-        await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network delay
-        setItems(mockLostItems);
-        setFilteredItems(mockLostItems);
+        setIsLoading(true);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/items?type=lost`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch items');
+        }
+        
+        const data = await response.json();
+        const sortedItems = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setItems(sortedItems);
+        setFilteredItems(sortedItems);
       } catch (error) {
         console.error('Error fetching lost items:', error);
+        setError('Failed to load items. Please try again later.');
       } finally {
         setIsLoading(false);
       }
@@ -134,8 +73,15 @@ export default function LostItemsPage() {
   };
   
   const handleSearch = (searchTerm) => {
+    if (!searchTerm) {
+      setFilteredItems(items);
+      return;
+    }
+    
     const filtered = items.filter(item =>
-      item.title.toLowerCase().includes(searchTerm.toLowerCase())
+      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.description && item.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (item.location && item.location.toLowerCase().includes(searchTerm.toLowerCase()))
     );
     setFilteredItems(filtered);
   };
@@ -154,6 +100,17 @@ export default function LostItemsPage() {
       {isLoading ? (
         <div style={{ textAlign: 'center', padding: '3rem 0' }}>
           <p>Loading items...</p>
+        </div>
+      ) : error ? (
+        <div style={{ 
+          textAlign: 'center', 
+          padding: '2rem', 
+          backgroundColor: '#ffebee', 
+          color: '#c62828', 
+          borderRadius: '4px',
+          marginTop: '1rem'
+        }}>
+          <p>{error}</p>
         </div>
       ) : filteredItems.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '3rem 0' }}>

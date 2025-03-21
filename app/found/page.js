@@ -5,125 +5,30 @@ import Link from 'next/link';
 import ItemCard from '../../components/ItemCard';
 import SearchBox from '../../components/SearchBox';
 
-// Mock data for found items
-const mockFoundItems = [
-  {
-    id: 1,
-    type: 'found',
-    title: 'Black Umbrella',
-    category: 'accessories',
-    description: 'Black folding umbrella with wooden handle',
-    location: 'Snyder Memorial Building',
-    date: '2023-2-28',
-    status: 'found',
-    imageUrl: null
-  },
-  {
-    id: 2,
-    type: 'found',
-    title: 'Car Keys',
-    category: 'keys',
-    description: 'Honda car keys with a rocket keychain',
-    location: 'Parking Lot 10',
-    date: '2023-5-8',
-    status: 'claimed',
-    imageUrl: null
-  },
-  {
-    id: 3,
-    type: 'found',
-    title: 'Blue Scarf',
-    category: 'clothing',
-    description: 'Blue knitted scarf with UT logo',
-    location: 'Student Union',
-    date: '2023-5-21',
-    status: 'found',
-    imageUrl: null
-  },
-  {
-    id: 4,
-    type: 'found',
-    title: 'Glasses',
-    category: 'accessories',
-    description: 'Black-rimmed prescription glasses in a brown case',
-    location: 'Savage Arena',
-    date: '2023-8-24',
-    status: 'delivered',
-    imageUrl: null
-  },
-  {
-    id: 5,
-    type: 'found',
-    title: 'Scientific Calculator',
-    category: 'electronics',
-    description: 'TI-84 Plus calculator',
-    location: 'North Engineering Building',
-    date: '2023-10-26',
-    status: 'found',
-    imageUrl: null
-  },
-  {
-    id: 6,
-    type: 'found',
-    title: 'Rocket Card',
-    category: 'accessories',
-    description: 'Rocket Card found in North Engineering',
-    location: 'North Engineering',
-    date: '2024-04-04',
-    status: 'found',
-    imageUrl: null
-  },
-  {
-    id: 7,
-    type: 'found',
-    title: 'Wallet',
-    category: 'accessories',
-    description: 'Wallet found in Nitschke Hall',
-    location: 'Nitschke Hall',
-    date: '2024-06-26',
-    status: 'found',
-    imageUrl: null
-  },
-  {
-    id: 8,
-    type: 'found',
-    title: 'Driver License',
-    category: 'documents',
-    description: 'Driver License found in Rocket Hall',
-    location: 'Rocket Hall',
-    date: '2024-12-09',
-    status: 'found',
-    imageUrl: null
-  },
-  {
-    id: 9,
-    type: 'found',
-    title: 'iPhone 13',
-    category: 'electronics',
-    description: 'Black iPhone 13 with clear case',
-    location: 'Memorial Field House',
-    date: '2025-02-15',
-    status: 'found',
-    imageUrl: null
-  }
-];
-
 export default function FoundItemsPage() {
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   
   useEffect(() => {
-    // In a real app, this would be an API call
-    // For now, we'll use the mock data
+    // Fetch real data from the API
     const fetchItems = async () => {
       try {
-        await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network delay
-        const sortedItems = mockFoundItems.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setIsLoading(true);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/items?type=found`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch items');
+        }
+        
+        const data = await response.json();
+        const sortedItems = data.sort((a, b) => new Date(b.date) - new Date(a.date));
         setItems(sortedItems);
         setFilteredItems(sortedItems);
       } catch (error) {
         console.error('Error fetching found items:', error);
+        setError('Failed to load items. Please try again later.');
       } finally {
         setIsLoading(false);
       }
@@ -168,8 +73,15 @@ export default function FoundItemsPage() {
   };
   
   const handleSearch = (searchTerm) => {
+    if (!searchTerm) {
+      setFilteredItems(items);
+      return;
+    }
+    
     const filtered = items.filter(item =>
-      item.title.toLowerCase().includes(searchTerm.toLowerCase())
+      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.description && item.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (item.location && item.location.toLowerCase().includes(searchTerm.toLowerCase()))
     );
     setFilteredItems(filtered);
   };
@@ -188,6 +100,17 @@ export default function FoundItemsPage() {
       {isLoading ? (
         <div style={{ textAlign: 'center', padding: '3rem 0' }}>
           <p>Loading items...</p>
+        </div>
+      ) : error ? (
+        <div style={{ 
+          textAlign: 'center', 
+          padding: '2rem', 
+          backgroundColor: '#ffebee', 
+          color: '#c62828', 
+          borderRadius: '4px',
+          marginTop: '1rem'
+        }}>
+          <p>{error}</p>
         </div>
       ) : filteredItems.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '3rem 0' }}>

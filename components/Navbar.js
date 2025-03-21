@@ -2,11 +2,14 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useAuth } from '../lib/auth/authContext';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, logout } = useAuth();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -14,7 +17,18 @@ export default function Navbar() {
 
   const isActive = (path) => {
     return pathname === path ? 
-      { fontWeight: 'bold', borderBottom: '3px solid var(--primary-yellow)' } : {};
+      { 
+        fontWeight: 'bold', 
+        borderTop: 'none',
+        borderRight: 'none',
+        borderLeft: 'none',
+        borderBottom: '3px solid var(--primary-yellow)' 
+      } : {};
+  };
+
+  const handleLogout = () => {
+    logout();
+    router.push('/');
   };
 
   return (
@@ -33,7 +47,7 @@ export default function Navbar() {
           <span>☰</span>
         </div>
         
-        <div className={`nav-links ${isMenuOpen ? 'open' : ''}`} style={{ display: 'flex', gap: '1.5rem' }}>
+        <div className={`nav-links ${isMenuOpen ? 'open' : ''}`} style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
           <Link href="/" style={{ color: 'white', textDecoration: 'none', padding: '0.5rem 0', ...isActive('/') }}>
             Home
           </Link>
@@ -43,9 +57,53 @@ export default function Navbar() {
           <Link href="/lost" style={{ color: 'white', textDecoration: 'none', padding: '0.5rem 0', ...isActive('/lost') }}>
             Lost Items
           </Link>
-          <Link href="/report" style={{ backgroundColor: 'var(--primary-yellow)', color: 'var(--primary-blue)', textDecoration: 'none', padding: '0.5rem 1rem', borderRadius: '5px', ...isActive('/report') }}>
+          <Link href="/report" style={{ 
+            backgroundColor: 'var(--primary-yellow)', 
+            color: 'var(--primary-blue)', 
+            textDecoration: 'none', 
+            padding: '0.5rem 1rem', 
+            borderRadius: '5px'
+          }}>
             Report
           </Link>
+          
+          {user ? (
+            <>
+              <div style={{ color: 'white', marginLeft: '1rem', display: 'flex', alignItems: 'center' }}>
+                <span style={{ marginRight: '1rem' }}>Hello, {user.username}</span>
+                <button 
+                  onClick={handleLogout}
+                  style={{ 
+                    backgroundColor: 'transparent', 
+                    borderTop: '1px solid white',
+                    borderRight: '1px solid white',
+                    borderBottom: '1px solid white',
+                    borderLeft: '1px solid white', 
+                    color: 'white', 
+                    padding: '0.3rem 0.8rem', 
+                    borderRadius: '4px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Logout
+                </button>
+              </div>
+            </>
+          ) : (
+            <Link href="/auth/login" style={{ 
+              color: 'white', 
+              textDecoration: 'none', 
+              padding: '0.3rem 0.8rem',
+              borderTop: '1px solid white',
+              borderRight: '1px solid white',
+              borderBottom: '1px solid white',
+              borderLeft: '1px solid white',
+              borderRadius: '4px',
+              marginLeft: '1rem'
+            }}>
+              Login
+            </Link>
+          )}
         </div>
       </div>
       

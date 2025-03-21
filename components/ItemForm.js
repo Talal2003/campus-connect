@@ -2,9 +2,11 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '../lib/auth/authContext';
 
 export default function ItemForm({ type }) {
   const router = useRouter();
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     title: '',
     category: '',
@@ -75,11 +77,45 @@ export default function ItemForm({ type }) {
     setError('');
     
     try {
-      // In a real implementation, this would send data to the server
-      // For now, we'll just simulate a successful submission
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Get token from localStorage
+      const token = localStorage.getItem('token');
       
-      setSuccess(`Your ${type} item has been reported successfully. You can track its status using the reference number: REF-${Math.floor(Math.random() * 10000)}`);
+      if (!token) {
+        throw new Error('You must be logged in to report an item');
+      }
+      
+      // Create item data to send to the API
+      const itemData = {
+        type,
+        title: formData.title,
+        category: formData.category,
+        description: formData.description,
+        location: formData.location || formData.building,
+        building: formData.building,
+        date: formData.date,
+        contactName: formData.contactName,
+        contactEmail: formData.contactEmail,
+        contactPhone: formData.contactPhone,
+        imageUrl: null // We're not handling image uploads in this version
+      };
+      
+      // Submit to the API
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/items`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(itemData)
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to submit item');
+      }
+      
+      setSuccess(`Your ${type} item has been reported successfully. You can track its status using the reference number: ${data.reference_number}`);
       
       // Reset form after successful submission
       setFormData({
@@ -97,11 +133,11 @@ export default function ItemForm({ type }) {
       
       // Redirect to track page after a delay
       setTimeout(() => {
-        router.push('/track');
+        router.push(`/${type}`);
       }, 3000);
       
     } catch (err) {
-      setError('An error occurred while submitting the form. Please try again.');
+      setError(err.message || 'An error occurred while submitting the form. Please try again.');
       console.error(err);
     } finally {
       setIsSubmitting(false);
@@ -173,6 +209,7 @@ export default function ItemForm({ type }) {
               <option value="books">Books</option>
               <option value="keys">Keys</option>
               <option value="id-cards">ID Cards</option>
+              <option value="other">Other</option>
             </select>
           </div>
           
@@ -244,7 +281,7 @@ export default function ItemForm({ type }) {
               onChange={handleChange}
               required
             />
-          </div> 
+          </div>
           
           <div className="form-group">
             <label htmlFor="images">Images (Optional)</label>
@@ -258,28 +295,69 @@ export default function ItemForm({ type }) {
               onChange={handleImageChange}
             />
             <small style={{ display: 'block', marginTop: '0.5rem', color: 'var(--dark-gray)' }}>
-              Upload clear images of the item to help with identification.
+              Upload images of the item to help with identification.
             </small>
           </div>
         </div>
         
         {type === 'found' && (
-          <div style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: 'var(--light-gray)', borderRadius: '0.5rem' }}>
-            <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem' }}>UTPD Drop-off Instructions</h3>
-            <p style={{ marginBottom: '0.5rem' }}>{dropOffInstructions}</p>
+          <div style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: 'var(--light-gray)', borderRadius: '0.25rem' }}>
+            <h4 style={{ marginBottom: '0.5rem', color: 'var(--primary-blue)' }}>Drop-off Instructions</h4>
+            <p>{dropOffInstructions}</p>
           </div>
         )}
         
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <button 
-            type="submit" 
-            className="btn-primary"
-            disabled={isSubmitting}
-            style={{ minWidth: '150px' }}
-          >
-            {isSubmitting ? 'Submitting...' : 'Submit Report'}
-          </button>
+        <div style={{ marginBottom: '1.5rem' }}>
+          <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem' }}>Contact Information</h3>
+          
+          <div className="form-group">
+            <label htmlFor="contactName">Your Name*</label>
+            <input
+              type="text"
+              id="contactName"
+              name="contactName"
+              className="form-control"
+              value={formData.contactName || (user ? user.username : '')}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="contactEmail">Email*</label>
+            <input
+              type="email"
+              id="contactEmail"
+              name="contactEmail"
+              className="form-control"
+              value={formData.contactEmail || (user ? user.email : '')}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="contactPhone">Phone Number</label>
+            <input
+              type="tel"
+              id="contactPhone"
+              name="contactPhone"
+              className="form-control"
+              placeholder="(419) XXX-XXXX"
+              value={formData.contactPhone}
+              onChange={handleChange}
+            />
+          </div>
         </div>
+        
+        <button 
+          type="submit" 
+          className="btn-primary" 
+          style={{ width: '100%' }}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Submitting...' : `Submit ${type === 'lost' ? 'Lost' : 'Found'} Item Report`}
+        </button>
       </form>
     </div>
   );

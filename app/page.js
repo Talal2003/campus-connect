@@ -1,7 +1,48 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
+  const [recentItems, setRecentItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchRecentItems = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/items?type=found&limit=4`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch recent items');
+        }
+        
+        const data = await response.json();
+        // Sort by date (newest first) and take the first 4
+        const sortedItems = data
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .slice(0, 4);
+          
+        setRecentItems(sortedItems);
+      } catch (error) {
+        console.error('Error fetching recent items:', error);
+        setError('Failed to load recent items');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchRecentItems();
+  }, []);
+
+  // Format date to MM/DD/YYYY
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+  };
+
   return (
     <div>
       <section style={{ 
@@ -119,20 +160,35 @@ export default function Home() {
           Recently Found Items
         </h2>
         
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', 
-          gap: '1.5rem' 
-        }}>
-          {[
-            { name: 'iPhone 13', location: 'Memorial Field House', date: '2/14/2025' },
-            { name: 'Driver License', location: 'Rocket Hall', date: '12/8/2024' },
-            { name: 'Wallet', location: 'Nitschke Hall', date: '6/25/2024' },
-            { name: 'Rocket Card', location: 'North Engineering', date: '4/3/2024' }
-          ].map((item) => {
-            return (
-              <div key={item.name} className="card">
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <p>Loading recent items...</p>
+          </div>
+        ) : error ? (
+          <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--error-red)' }}>
+            <p>{error}</p>
+          </div>
+        ) : recentItems.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <p>No found items available.</p>
+          </div>
+        ) : (
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', 
+            gap: '1.5rem' 
+          }}>
+            {recentItems.map((item) => (
+              <div key={item.id} className="card">
                 <div style={{ height: '150px', backgroundColor: 'var(--light-gray)', position: 'relative' }}>
+                  {item.imageUrl ? (
+                    <Image 
+                      src={item.imageUrl} 
+                      alt={item.title} 
+                      fill 
+                      style={{ objectFit: 'cover' }} 
+                    />
+                  ) : null}
                   <div style={{ 
                     position: 'absolute', 
                     top: '0.5rem', 
@@ -148,14 +204,14 @@ export default function Home() {
                   </div>
                 </div>
                 <div style={{ padding: '1rem' }}>
-                  <h3 style={{ marginBottom: '0.5rem', fontSize: '1.1rem' }}>{item.name}</h3>
+                  <h3 style={{ marginBottom: '0.5rem', fontSize: '1.1rem' }}>{item.title}</h3>
                   <p style={{ color: 'var(--dark-gray)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                    Location: {item.location}
+                    Location: {item.location || item.building}
                   </p>
                   <p style={{ color: 'var(--dark-gray)', fontSize: '0.9rem' }}>
-                    Date: {item.date}
+                    Date: {formatDate(item.date)}
                   </p>
-                  <Link href={`/found/${item.name}`} style={{ 
+                  <Link href={`/found/${item.id}`} style={{ 
                     display: 'inline-block', 
                     marginTop: '1rem',
                     color: 'var(--primary-blue)',
@@ -165,9 +221,9 @@ export default function Home() {
                   </Link>
                 </div>
               </div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        )}
         
         <div style={{ textAlign: 'center', marginTop: '2rem' }}>
           <Link href="/found" className="btn-primary">

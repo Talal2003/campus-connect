@@ -20,6 +20,22 @@ You can start editing the page by modifying `app/page.js`. The page auto-updates
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Campus Connect Frontend
+
+### Environment Configuration
+
+1. Create a `.env.local` file in the frontend directory with the following variables:
+   ```
+   NEXT_PUBLIC_API_URL=http://localhost:3001
+   ```
+
+2. If you're using port forwarding or a different backend host:
+   ```
+   NEXT_PUBLIC_API_URL=https://your-domain.com/api
+   ```
+
+3. Make sure the API_URL points to your backend server location
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
