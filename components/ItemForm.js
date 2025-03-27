@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../lib/auth/authContext';
+import { createItem } from '../lib/db';
 
 export default function ItemForm({ type }) {
   const router = useRouter();
@@ -13,9 +14,6 @@ export default function ItemForm({ type }) {
     description: '',
     location: '',
     date: '',
-    contactName: '',
-    contactEmail: '',
-    contactPhone: '',
     images: [],
     building: ''
   });
@@ -77,14 +75,11 @@ export default function ItemForm({ type }) {
     setError('');
     
     try {
-      // Get token from localStorage
-      const token = localStorage.getItem('token');
-      
-      if (!token) {
+      if (!user) {
         throw new Error('You must be logged in to report an item');
       }
       
-      // Create item data to send to the API
+      // Create item data with correct column names
       const itemData = {
         type,
         title: formData.title,
@@ -93,27 +88,16 @@ export default function ItemForm({ type }) {
         location: formData.location || formData.building,
         building: formData.building,
         date: formData.date,
-        contactName: formData.contactName,
-        contactEmail: formData.contactEmail,
-        contactPhone: formData.contactPhone,
-        imageUrl: null // We're not handling image uploads in this version
+        contact_name: user.user_metadata?.username || 'User',
+        contact_email: user.email,
+        contact_phone: '', // No longer collecting phone number
+        image_url: null, // We're not handling image uploads in this version
+        user_id: user.id, // This is now a UUID from Supabase
+        status: 'pending'
       };
       
-      // Submit to the API
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/items`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(itemData)
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to submit item');
-      }
+      // Submit to Supabase
+      const data = await createItem(itemData);
       
       setSuccess(`Your ${type} item has been reported successfully. You can track its status using the reference number: ${data.reference_number}`);
       
@@ -124,9 +108,6 @@ export default function ItemForm({ type }) {
         description: '',
         location: '',
         date: '',
-        contactName: '',
-        contactEmail: '',
-        contactPhone: '',
         images: [],
         building: ''
       });
@@ -307,53 +288,10 @@ export default function ItemForm({ type }) {
           </div>
         )}
         
-        <div style={{ marginBottom: '1.5rem' }}>
-          <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem' }}>Contact Information</h3>
-          
-          <div className="form-group">
-            <label htmlFor="contactName">Your Name*</label>
-            <input
-              type="text"
-              id="contactName"
-              name="contactName"
-              className="form-control"
-              value={formData.contactName || (user ? user.username : '')}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="contactEmail">Email*</label>
-            <input
-              type="email"
-              id="contactEmail"
-              name="contactEmail"
-              className="form-control"
-              value={formData.contactEmail || (user ? user.email : '')}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="contactPhone">Phone Number</label>
-            <input
-              type="tel"
-              id="contactPhone"
-              name="contactPhone"
-              className="form-control"
-              placeholder="(419) XXX-XXXX"
-              value={formData.contactPhone}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-        
         <button 
           type="submit" 
           className="btn-primary" 
-          style={{ width: '100%' }}
+          style={{ width: '100%', marginTop: '1.5rem' }}
           disabled={isSubmitting}
         >
           {isSubmitting ? 'Submitting...' : `Submit ${type === 'lost' ? 'Lost' : 'Found'} Item Report`}

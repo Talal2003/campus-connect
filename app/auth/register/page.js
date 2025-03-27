@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense } from 'react';
-import RegisterForm from './RegisterForm';
+import RegisterForm from '../../../components/RegisterForm';
 
 export default function RegisterPage() {
   return (

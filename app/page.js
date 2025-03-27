@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { getItems } from '../lib/db';
 
 export default function Home() {
   const [recentItems, setRecentItems] = useState([]);
@@ -13,15 +14,9 @@ export default function Home() {
     const fetchRecentItems = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/items?type=found&limit=4`);
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch recent items');
-        }
-        
-        const data = await response.json();
+        const items = await getItems('found');
         // Sort by date (newest first) and take the first 4
-        const sortedItems = data
+        const sortedItems = items
           .sort((a, b) => new Date(b.date) - new Date(a.date))
           .slice(0, 4);
           

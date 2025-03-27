@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useAuth } from '../../../lib/auth/authContext';
+import { useAuth } from '../lib/auth/authContext';
 
 export default function LoginForm() {
   const [loginIdentifier, setLoginIdentifier] = useState('');

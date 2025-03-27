@@ -3,15 +3,18 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useAuth } from '../../../lib/auth/authContext';
+import { useAuth } from '../lib/auth/authContext';
 
 export default function RegisterForm() {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const { register, user } = useAuth();
@@ -26,37 +29,77 @@ export default function RegisterForm() {
     }
   }, [user, router, redirect]);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!username || !email || !password || !confirmPassword) {
+    if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword) {
       setError('All fields are required');
       return;
     }
     
-    if (password !== confirmPassword) {
+    if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       return;
     }
     
-    setIsLoading(true);
+    setIsSubmitting(true);
     setError('');
     
     try {
-      const result = await register(username, email, password);
+      const result = await register(formData.username, formData.email, formData.password);
       
       if (result.success) {
-        router.push(redirect);
+        setSuccess(true);
       } else {
         setError(result.error || 'Registration failed');
       }
     } catch (err) {
-      setError('An unexpected error occurred');
+      setError(err.message || 'An unexpected error occurred');
+      console.error(err);
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
+  // Registration successful view
+  if (success) {
+    return (
+      <div className="container" style={{ maxWidth: '500px', margin: '0 auto' }}>
+        <div className="card" style={{ padding: '2rem' }}>
+          <h1 style={{ color: 'var(--primary-blue)', marginBottom: '1.5rem', textAlign: 'center' }}>Registration Successful!</h1>
+          
+          <div style={{ 
+            backgroundColor: '#e8f5e9', 
+            color: '#2e7d32', 
+            padding: '1.5rem', 
+            borderRadius: '0.25rem',
+            marginBottom: '2rem',
+            textAlign: 'center'
+          }}>
+            <p style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Your account has been created successfully!</p>
+            <p>A confirmation email has been sent to your email address.</p>
+            <p>Please check your inbox and follow the instructions to verify your account.</p>
+          </div>
+          
+          <Link href="/auth/login">
+            <button 
+              className="btn-primary" 
+              style={{ width: '100%', padding: '0.8rem' }}
+            >
+              Back to Login
+            </button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // Registration form view
   return (
     <div className="container" style={{ maxWidth: '500px', margin: '0 auto' }}>
       <div className="card" style={{ padding: '2rem' }}>
@@ -80,10 +123,11 @@ export default function RegisterForm() {
             <input
               type="text"
               id="username"
+              name="username"
               className="form-control"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              disabled={isLoading}
+              value={formData.username}
+              onChange={handleChange}
+              disabled={isSubmitting}
               required
             />
           </div>
@@ -93,10 +137,11 @@ export default function RegisterForm() {
             <input
               type="email"
               id="email"
+              name="email"
               className="form-control"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={isLoading}
+              value={formData.email}
+              onChange={handleChange}
+              disabled={isSubmitting}
               required
             />
           </div>
@@ -106,10 +151,11 @@ export default function RegisterForm() {
             <input
               type="password"
               id="password"
+              name="password"
               className="form-control"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={isLoading}
+              value={formData.password}
+              onChange={handleChange}
+              disabled={isSubmitting}
               required
             />
           </div>
@@ -119,10 +165,11 @@ export default function RegisterForm() {
             <input
               type="password"
               id="confirmPassword"
+              name="confirmPassword"
               className="form-control"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              disabled={isLoading}
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              disabled={isSubmitting}
               required
             />
           </div>
@@ -131,9 +178,9 @@ export default function RegisterForm() {
             type="submit" 
             className="btn-primary" 
             style={{ width: '100%', marginTop: '1rem' }}
-            disabled={isLoading}
+            disabled={isSubmitting}
           >
-            {isLoading ? 'Creating Account...' : 'Register'}
+            {isSubmitting ? 'Creating Account...' : 'Register'}
           </button>
         </form>
         

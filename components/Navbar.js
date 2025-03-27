@@ -70,7 +70,7 @@ export default function Navbar() {
           {user ? (
             <>
               <div style={{ color: 'white', marginLeft: '1rem', display: 'flex', alignItems: 'center' }}>
-                <span style={{ marginRight: '1rem' }}>Hello, {user.username}</span>
+                <span style={{ marginRight: '1rem' }}>Hello, {user.user_metadata?.username || 'User'}</span>
                 <button 
                   onClick={handleLogout}
                   style={{ 
