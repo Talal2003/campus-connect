@@ -2,7 +2,7 @@ import Link from 'next/link';
 import StatusBadge from './StatusBadge';
 
 export default function ItemCard({ item }) {
-  const { id, type, title, category, location, date, status, imageUrl } = item;
+  const { id, type, title, category, location, date, status, image_url } = item;
   
   return (
     <div className="card">
@@ -10,7 +10,7 @@ export default function ItemCard({ item }) {
         height: '180px', 
         backgroundColor: 'var(--light-gray)', 
         position: 'relative',
-        backgroundImage: imageUrl ? `url(${imageUrl})` : 'none',
+        backgroundImage: image_url ? `url(${image_url})` : 'none',
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       }}>

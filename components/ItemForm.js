@@ -4,6 +4,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../lib/auth/authContext';
 import { createItem } from '../lib/db';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+);
 
 export default function ItemForm({ type }) {
   const router = useRouter();
@@ -69,6 +75,33 @@ export default function ItemForm({ type }) {
     setFormData({ ...formData, images: files });
   };
   
+  const uploadImagesToSupabase = async (files, itemId) => {
+    const urls = [];
+  
+    for (const file of files) {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${itemId}-${Date.now()}.${fileExt}`;
+      const filePath = `${itemId}/${fileName}`;
+  
+      const { error } = await supabase.storage
+        .from('item-images')
+        .upload(filePath, file);
+  
+      if (error) {
+        console.error('Error uploading image:', error.message);
+        continue;
+      }
+  
+      const { data } = supabase.storage
+        .from('item-images')
+        .getPublicUrl(filePath);
+  
+      urls.push(data.publicUrl);
+    }
+  
+    return urls;
+  };  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -91,11 +124,17 @@ export default function ItemForm({ type }) {
         contact_name: user.user_metadata?.username || 'User',
         contact_email: user.email,
         contact_phone: '', // No longer collecting phone number
-        image_url: null, // We're not handling image uploads in this version
+        image_url: null, // Why not?
         user_id: user.id, // This is now a UUID from Supabase
         status: 'pending'
       };
-      
+
+      const itemId = crypto.randomUUID(); // or use any ID scheme you like
+      const imageUrls = await uploadImagesToSupabase(formData.images, itemId);
+      itemData.image_url = imageUrls[0] || null; // or store all if DB allows array
+      itemData.image_urls = imageUrls; // optional if your schema supports text[]
+      itemData.id = itemId; // optional: only if you're assigning IDs manually
+
       // Submit to Supabase
       const data = await createItem(itemData);
       
