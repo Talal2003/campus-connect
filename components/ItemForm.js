@@ -92,11 +92,11 @@ export default function ItemForm({ type }) {
         continue;
       }
   
-      const { data } = supabase.storage
+      const { data: publicUrlData } = supabase.storage
         .from('item-images')
         .getPublicUrl(filePath);
   
-      urls.push(data.publicUrl);
+      urls.push(publicUrlData.publicUrl);
     }
   
     return urls;
