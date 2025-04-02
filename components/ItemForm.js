@@ -78,17 +78,21 @@ export default function ItemForm({ type }) {
   const uploadImagesToSupabase = async (files, itemId) => {
     const urls = [];
   
+    console.log("Uploading", files.length, "image(s) for item:", itemId);
+  
     for (const file of files) {
       const fileExt = file.name.split('.').pop();
       const fileName = `${itemId}-${Date.now()}.${fileExt}`;
       const filePath = `${itemId}/${fileName}`;
+  
+      console.log("Uploading file:", file.name, "to path:", filePath);
   
       const { error } = await supabase.storage
         .from('item-images')
         .upload(filePath, file);
   
       if (error) {
-        console.error('Error uploading image:', error.message);
+        console.error("❌ Error uploading image:", error.message);
         continue;
       }
   
@@ -96,11 +100,14 @@ export default function ItemForm({ type }) {
         .from('item-images')
         .getPublicUrl(filePath);
   
+      console.log("✅ Image uploaded. Public URL:", publicUrlData?.publicUrl);
+  
       urls.push(publicUrlData.publicUrl);
     }
   
+    console.log("✅ All image URLs:", urls);
     return urls;
-  };  
+  };    
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -134,6 +141,8 @@ export default function ItemForm({ type }) {
       itemData.image_url = imageUrls[0] || null; // or store all if DB allows array
       //itemData.image_urls = imageUrls; // optional for multiple images
       itemData.id = itemId; // optional: only if you're assigning IDs manually
+
+      console.log("Submitting item data:", itemData);
 
       // Submit to Supabase
       const data = await createItem(itemData);
