@@ -176,9 +176,9 @@ export default function Home() {
             {recentItems.map((item) => (
               <div key={item.id} className="card">
                 <div style={{ height: '150px', backgroundColor: 'var(--light-gray)', position: 'relative' }}>
-                  {item.imageUrl ? (
+                  {item.image_url ? (
                     <Image 
-                      src={item.imageUrl} 
+                      src={item.image_url} 
                       alt={item.title} 
                       fill 
                       style={{ objectFit: 'cover' }} 
