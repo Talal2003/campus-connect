@@ -15,6 +15,8 @@ export default async function LostItemDetail({ params }) {
       <p><strong>Description:</strong> {item.description}</p>
       <p><strong>Location:</strong> {item.location}</p>
       <p><strong>Date:</strong> {new Date(item.date).toLocaleDateString()}</p>
+      <p><strong>Reported by:</strong> {item.contact_name}</p>
+      <p><strong>Contact email:</strong> <a href={`mailto:${item.contact_email}`}>{item.contact_email}</a></p>
       {item.image_url && (
         <img
           src={item.image_url}
