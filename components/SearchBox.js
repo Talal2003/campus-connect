@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-export default function SearchBox({ onSearch }) {
+export default function SearchBox({ onSearch, onFilterChange }) {
   const [searchTerm, setSearchTerm] = useState('');
+  const [category, setCategory] = useState('');
 
-  const handleSearch = (e) => {
-    e.preventDefault();
+  // Search on every keystroke
+  useEffect(() => {
     onSearch(searchTerm);
-  };
+  }, [searchTerm]);
+
+  // Filter on category change
+  useEffect(() => {
+    onFilterChange({ category });
+  }, [category]);
 
   return (
-    <form onSubmit={handleSearch} style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center' }}>
+    <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
       <input
         type="text"
         placeholder="Search by title..."
@@ -21,11 +27,19 @@ export default function SearchBox({ onSearch }) {
           maxWidth: '400px',
           border: '1px solid var(--primary-blue)',
           borderRadius: '5px',
-          boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
-          marginRight: '0.5rem'
+          boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)'
         }}
       />
-      <select onChange={(e) => onFilterChange(e.target.value)} style={{ marginLeft: '0.5rem', padding: '0.5rem', borderRadius: '5px', border: '1px solid var(--primary-blue)' }}>
+
+      <select
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+        style={{
+          padding: '0.5rem',
+          borderRadius: '5px',
+          border: '1px solid var(--primary-blue)'
+        }}
+      >
         <option value="">All Categories</option>
         <option value="electronics">Electronics</option>
         <option value="accessories">Accessories</option>
@@ -33,7 +47,6 @@ export default function SearchBox({ onSearch }) {
         <option value="books">Books</option>
         <option value="other">Other</option>
       </select>
-      <button type="submit" style={{ padding: '0.5rem 1rem', marginLeft: '0.5rem', backgroundColor: 'var(--primary-blue)', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Search</button>
-    </form>
+    </div>
   );
-} 
+}

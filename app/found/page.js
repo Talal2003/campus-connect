@@ -89,7 +89,7 @@ export default function FoundItemsPage() {
         </Link>
       </div>
       
-      <SearchBox onSearch={handleSearch} />
+      <SearchBox onSearch={handleSearch} onFilterChange={handleFilterChange} />
       
       {isLoading ? (
         <div style={{ textAlign: 'center', padding: '3rem 0' }}>
