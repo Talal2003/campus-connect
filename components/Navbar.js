@@ -69,6 +69,15 @@ export default function Navbar() {
           
           {user ? (
             <>
+              <Link href="/my-items" style={{ 
+                color: 'white', 
+                textDecoration: 'none', 
+                padding: '0.5rem 0',
+                ...isActive('/my-items') 
+              }}>
+                My Items
+              </Link>
+              
               <div style={{ color: 'white', marginLeft: '1rem', display: 'flex', alignItems: 'center' }}>
                 <span style={{ marginRight: '1rem' }}>Hello, {user.user_metadata?.username || 'User'}</span>
                 <button 
