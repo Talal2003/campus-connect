@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '../lib/auth/authContext';
+import Image from 'next/image'
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -41,14 +42,15 @@ export default function Navbar() {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <img 
-            src="toledo.png" 
+            src="toledo.png"
             alt="UT logo"
-            style={{ height: '55px', width: 'auto', marginTop: '6px' }}
+            style={{ height: '60px', width: 'auto', transform: 'translateY(6px)' }}
           />
           <Link href="/" style={{ color: 'white', fontSize: '1.5rem', fontWeight: 'bold', textDecoration: 'none' }}>
             <span style={{ color: 'var(--primary-yellow)' }}>UT</span> Campus Connect
           </Link>
         </div>
+
 
         
         <div className="mobile-menu-button" onClick={toggleMenu} style={{ display: 'none', cursor: 'pointer' }}>
