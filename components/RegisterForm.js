@@ -61,7 +61,15 @@ export default function RegisterForm() {
       if (result.success) {
         setSuccess(true);
       } else {
-        setError(result.error || 'Registration failed');
+        // Intercept known Supabase error messages
+        const msg = result.error || '';
+        if (msg.includes('duplicate key value') && msg.includes('users_username_key')) {
+          setError('This username is already taken.');
+        } else if (msg.includes('duplicate key value') && msg.includes('users_email_key')) {
+          setError('This email already has an account associated with it.');
+        } else {
+          setError(msg || 'Registration failed');
+        }
       }
     } catch (err) {
       setError(err.message || 'An unexpected error occurred');
