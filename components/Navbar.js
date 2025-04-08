@@ -43,7 +43,7 @@ export default function Navbar() {
           <img 
             src="toledo.png" 
             alt="UT logo"
-            style={{ height: '32px', width: 'auto' }}
+            style={{ height: '48px', width: 'auto' }}
           />
           <Link href="/" style={{ color: 'white', fontSize: '1.5rem', fontWeight: 'bold', textDecoration: 'none' }}>
             <span style={{ color: 'var(--primary-yellow)' }}>UT</span> Campus Connect
