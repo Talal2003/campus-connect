@@ -39,9 +39,17 @@ export default function Navbar() {
         alignItems: 'center',
         padding: '1rem 0'
       }}>
-        <Link href="/" style={{ color: 'white', fontSize: '1.5rem', fontWeight: 'bold', textDecoration: 'none' }}>
-          <span style={{ color: 'var(--primary-yellow)' }}>UT</span> Campus Connect
-        </Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <img 
+            src="toledo.png" 
+            alt="UT logo"
+            style={{ height: '32px', width: 'auto' }}
+          />
+          <Link href="/" style={{ color: 'white', fontSize: '1.5rem', fontWeight: 'bold', textDecoration: 'none' }}>
+            <span style={{ color: 'var(--primary-yellow)' }}>UT</span> Campus Connect
+          </Link>
+        </div>
+
         
         <div className="mobile-menu-button" onClick={toggleMenu} style={{ display: 'none', cursor: 'pointer' }}>
           <span>☰</span>
