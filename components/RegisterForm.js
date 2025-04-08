@@ -41,6 +41,11 @@ export default function RegisterForm() {
       setError('All fields are required');
       return;
     }
+
+    if (!formData.email.endsWith('@rockets.utoledo.edu')) {
+      setError('Only UT email addresses are allowed (example@rockets.utoledo.edu)');
+      return;
+    }
     
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
