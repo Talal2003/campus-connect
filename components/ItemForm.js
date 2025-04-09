@@ -127,6 +127,7 @@ export default function ItemForm({ type }) {
         description: formData.description,
         location: formData.location || formData.building,
         building: formData.building,
+        dropoff_location: locationRoomMap[formData.building] || null,
         date: formData.date,
         contact_name: user.user_metadata?.username || 'User',
         contact_email: user.email,

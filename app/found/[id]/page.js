@@ -38,6 +38,11 @@ export default async function ItemDetail({ params }) {
           <p><strong>Type:</strong> {capitalizeFirst(item.type)}</p> {/* Add if type should be shown */}
           <p><strong>Description:</strong> {item.description}</p>
           <p><strong>Location:</strong> {item.location}</p>
+
+          {item.dropoff_location && (
+            <p><strong>Drop-off Location:</strong> {item.building}: {item.dropoff_location}</p>
+          )}
+
           <p><strong>Date:</strong> {new Date(item.date).toLocaleDateString()}</p>
         </div>
 
