@@ -57,7 +57,7 @@ export default function ItemForm({ type }) {
     'University Hall': 'Room 4260',
     'Wolfe': 'Room 1227',
     'Health Science Campus': 'Mulford Library 007',
-    'Other': 'the nearest UTPD location',
+    'Other': 'Nearest UTPD location',
   };
   
   const dropOffInstructions = formData.building ? 
