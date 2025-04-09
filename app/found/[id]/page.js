@@ -10,21 +10,23 @@ export default async function ItemDetail({ params }) {
       <div className="card" style={{ padding: '2rem' }}>
         <h1 style={{ color: 'var(--primary-blue)', marginBottom: '1.5rem' }}>{item.title}</h1>
 
-        {/* Single Image */}
-        {item.image_url && (
-          <div style={{ marginBottom: '1.5rem' }}>
-            <img
-              src={item.image_url}
-              alt={item.title}
-              style={{
-                width: '100%',
-                maxWidth: '500px',
-                height: 'auto',
-                objectFit: 'cover',
-                borderRadius: '8px',
-                boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
-              }}
-            />
+        {/* Gallery */}
+        {item.image_url?.length > 0 && (
+          <div style={{ display: 'flex', gap: '1rem', overflowX: 'auto', marginBottom: '1.5rem' }}>
+            {item.image_url.map((url, index) => (
+              <img
+                key={index}
+                src={url}
+                alt={`Image ${index + 1}`}
+                style={{
+                  width: '200px',
+                  height: '200px',
+                  objectFit: 'cover',
+                  borderRadius: '8px',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+                }}
+              />
+            ))}
           </div>
         )}
 
