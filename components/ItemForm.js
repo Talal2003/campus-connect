@@ -148,7 +148,7 @@ export default function ItemForm({ type }) {
       // Submit to Supabase
       const data = await createItem(itemData);
       
-      setSuccess(`Your ${type} item has been reported successfully. You can track its status using the reference number: ${data.reference_number}`);
+      setSuccess(`Your ${type} item has been reported successfully. You can track its status on this page`);
       
       // Reset form after successful submission
       setFormData({
