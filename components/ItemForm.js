@@ -11,10 +11,6 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
-function capitalizeFirst(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
 export default function ItemForm({ type }) {
   const router = useRouter();
   const { user } = useAuth();
@@ -125,9 +121,9 @@ export default function ItemForm({ type }) {
       
       // Create item data with correct column names
       const itemData = {
-        type: capitalizeFirst(type),
+        type,
         title: formData.title,
-        category: capitalizeFirst(formData.category),
+        category: formData.category,
         description: formData.description,
         location: formData.location || formData.building,
         building: formData.building,
@@ -135,7 +131,7 @@ export default function ItemForm({ type }) {
         contact_name: user.user_metadata?.username || 'User',
         contact_email: user.email,
         contact_phone: '', // No longer collecting phone number
-        image_url: null,
+        image_url: null, // Why not?
         user_id: user.id, // This is now a UUID from Supabase
         status: 'pending'
       };
