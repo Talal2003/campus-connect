@@ -29,9 +29,9 @@ export default function ItemForm({ type }) {
   const [success, setSuccess] = useState('');
   
   const locationRoomMap = {
-    'Bowman-Oddy: Biology': 'Room 1235',
-    'Bowman-Oddy: Chemistry': 'Room 2022',
-    'Bowman-Oddy: Storeroom': 'Room 1073',
+    'Bowman-Oddy- Biology': 'Room 1235',
+    'Bowman-Oddy- Chemistry': 'Room 2022',
+    'Bowman-Oddy- Storeroom': 'Room 1073',
     'Carlson Library': 'Circulation Desk',
     'CPA': 'Room 1030',
     'Field House': 'Room 1500',
@@ -51,7 +51,7 @@ export default function ItemForm({ type }) {
     'Snyder': 'Room 3000',
     'Stranahan North/Savage Business': 'Room 3130',
     'Stranahan South': 'Room 5017',
-    'Student REC: Front': 'Front Center',
+    'Student REC- Front': 'Front Center',
     'Student Union/Rocket Copy': 'Room 2525',
     'Tucker/Eberly Center': 'Room 168',
     'University Hall': 'Room 4260',
@@ -267,9 +267,9 @@ export default function ItemForm({ type }) {
               required
             >
               <option value="">Select a location</option>
-              <option value="Bowman-Oddy: Biology">Bowman-Oddy: Biology</option>
-              <option value="Bowman-Oddy: Chemistry">Bowman-Oddy: Chemistry</option>
-              <option value="Bowman-Oddy: Storeroom">Bowman-Oddy: Storeroom</option>
+              <option value="Bowman-Oddy- Biology">Bowman-Oddy: Biology</option>
+              <option value="Bowman-Oddy- Chemistry">Bowman-Oddy: Chemistry</option>
+              <option value="Bowman-Oddy- Storeroom">Bowman-Oddy: Storeroom</option>
               <option value="Carlson Library">Carlson Library Circulation Desk</option>
               <option value="CPA">CPA</option>
               <option value="Field House">Field House</option>
@@ -289,7 +289,7 @@ export default function ItemForm({ type }) {
               <option value="Snyder">Snyder</option>
               <option value="Stranahan North/Savage Business">Stranahan North/Savage Business</option>
               <option value="Stranahan South">Stranahan South</option>
-              <option value="Student REC: Front">Student REC: Front Front Center</option>
+              <option value="Student REC- Front">Student REC: Front Front Center</option>
               <option value="Student Union/Rocket Copy">Student Union / Rocket Copy</option>
               <option value="Tucker/Eberly Center">Tucker/Eberly Center</option>
               <option value="University Hall">University Hall</option>
