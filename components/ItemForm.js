@@ -51,12 +51,13 @@ export default function ItemForm({ type }) {
     'Snyder': 'Room 3000',
     'Stranahan North/Savage Business': 'Room 3130',
     'Stranahan South': 'Room 5017',
-    'Student REC- Front': 'Front Center',
+    'Student REC': 'Front Desk',
     'Student Union/Rocket Copy': 'Room 2525',
     'Tucker/Eberly Center': 'Room 168',
     'University Hall': 'Room 4260',
     'Wolfe': 'Room 1227',
-    'Health Science Campus': 'Mulford Library 007'
+    'Health Science Campus': 'Mulford Library 007',
+    'Other': 'the nearest UTPD location',
   };
   
   const dropOffInstructions = formData.building ? 
@@ -271,26 +272,26 @@ export default function ItemForm({ type }) {
               <option value="Bowman-Oddy- Biology">Bowman-Oddy- Biology</option>
               <option value="Bowman-Oddy- Chemistry">Bowman-Oddy- Chemistry</option>
               <option value="Bowman-Oddy- Storeroom">Bowman-Oddy- Storeroom</option>
-              <option value="Carlson Library">Carlson Library Circulation Desk</option>
+              <option value="Carlson Library">Carlson Library</option>
               <option value="CPA">CPA</option>
               <option value="Field House">Field House</option>
               <option value="Gillham">Gillham</option>
               <option value="Health and Human Services">Health and Human Services</option>
-              <option value="Honors Academic Village">Honors Academic Village Front Desk</option>
+              <option value="Honors Academic Village">Honors Academic Village</option>
               <option value="Law Center">Law Center</option>
               <option value="McMaster">McMaster</option>
               <option value="Nitschke">Nitschke</option>
-              <option value="Ottawa East">Ottawa East Front Desk</option>
-              <option value="Ottawa West">Ottawa West Front Desk</option>
-              <option value="Parks Tower">Parks Tower Front Desk</option>
-              <option value="Presidents Hall">Presidents Hall Front Desk</option>
+              <option value="Ottawa East">Ottawa East</option>
+              <option value="Ottawa West">Ottawa West</option>
+              <option value="Parks Tower">Parks Tower</option>
+              <option value="Presidents Hall">Presidents Hall</option>
               <option value="Rocket Hall">Rocket Hall</option>
               <option value="Rocket Hall Computer lab">Rocket Hall Computer Lab</option>
-              <option value="Savage Arena/Glass Bowl">Savage Arena/Glass Bowl Executive Assistant</option>
+              <option value="Savage Arena/Glass Bowl">Savage Arena/Glass Bowl</option>
               <option value="Snyder">Snyder</option>
               <option value="Stranahan North/Savage Business">Stranahan North/Savage Business</option>
               <option value="Stranahan South">Stranahan South</option>
-              <option value="Student REC- Front">Student REC- Front Front Center</option>
+              <option value="Student REC">Student REC</option>
               <option value="Student Union/Rocket Copy">Student Union/Rocket Copy</option>
               <option value="Tucker/Eberly Center">Tucker/Eberly Center</option>
               <option value="University Hall">University Hall</option>
