@@ -267,9 +267,9 @@ export default function ItemForm({ type }) {
               required
             >
               <option value="">Select a location</option>
-              <option value="Bowman-Oddy- Biology">Bowman-Oddy- Biology</option>
-              <option value="Bowman-Oddy- Chemistry">Bowman-Oddy- Chemistry</option>
-              <option value="Bowman-Oddy- Storeroom">Bowman-Oddy- Storeroom</option>
+              <option value="Bowman-Oddy- Biology">Bowman-Oddy: Biology</option>
+              <option value="Bowman-Oddy- Chemistry">Bowman-Oddy: Chemistry</option>
+              <option value="Bowman-Oddy- Storeroom">Bowman-Oddy: Storeroom</option>
               <option value="Carlson Library">Carlson Library Circulation Desk</option>
               <option value="CPA">CPA</option>
               <option value="Field House">Field House</option>
@@ -282,14 +282,14 @@ export default function ItemForm({ type }) {
               <option value="Ottawa East">Ottawa East Front Desk</option>
               <option value="Ottawa West">Ottawa West Front Desk</option>
               <option value="Parks Tower">Parks Tower Front Desk</option>
-              <option value="President\'s Hall">President\'s Hall Front Desk</option>
+              <option value="President\'s Hall">Presidents Hall Front Desk</option>
               <option value="Rocket Hall">Rocket Hall</option>
-              <option value="Rocket Hall cmpt lab">Rocket Hall cmpt lab Computer Lab</option>
+              <option value="Rocket Hall cmpt lab">Rocket Hall Computer Lab</option>
               <option value="Savage Arena/Glass Bowl">Savage Arena/Glass Bowl Executive Assistant</option>
               <option value="Snyder">Snyder</option>
               <option value="Stranahan North/Savage Business">Stranahan North/Savage Business</option>
               <option value="Stranahan South">Stranahan South</option>
-              <option value="Student REC- Front">Student REC- Front Front Center</option>
+              <option value="Student REC- Front">Student REC: Front Front Center</option>
               <option value="Student Union / Rocket Copy">Student Union / Rocket Copy</option>
               <option value="Tucker/Eberly Center">Tucker/Eberly Center</option>
               <option value="University Hall">University Hall</option>
