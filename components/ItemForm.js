@@ -138,7 +138,7 @@ export default function ItemForm({ type }) {
 
       const itemId = crypto.randomUUID(); // or use any ID scheme you like
       const imageUrls = await uploadImagesToSupabase(formData.images, itemId);
-      itemData.image_url = imageUrls; // or store all if DB allows array
+      itemData.image_url = imageUrls[0] || null; // or store all if DB allows array
       //itemData.image_urls = imageUrls; // optional for multiple images
       itemData.id = itemId; // optional: only if you're assigning IDs manually
 
