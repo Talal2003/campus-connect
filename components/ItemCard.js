@@ -4,6 +4,10 @@ import StatusBadge from './StatusBadge';
 export default function ItemCard({ item }) {
   const { id, type, title, category, location, date, status, image_url } = item;
   
+  function capitalizeFirst(str) {
+    return str?.charAt(0).toUpperCase() + str?.slice(1);
+  }  
+
   return (
     <div className="card">
       <div style={{ 
@@ -37,8 +41,9 @@ export default function ItemCard({ item }) {
         </div>
         
         <p style={{ color: 'var(--dark-gray)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-          Category: {category}
+          Category: {capitalizeFirst(category)}
         </p>
+
         
         <p style={{ color: 'var(--dark-gray)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
           Location: {location}
