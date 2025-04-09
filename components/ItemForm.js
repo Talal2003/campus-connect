@@ -267,9 +267,9 @@ export default function ItemForm({ type }) {
               required
             >
               <option value="">Select a location</option>
-              <option value="Bowman-Oddy- Biology">Bowman-Oddy: Biology</option>
-              <option value="Bowman-Oddy- Chemistry">Bowman-Oddy: Chemistry</option>
-              <option value="Bowman-Oddy- Storeroom">Bowman-Oddy: Storeroom</option>
+              <option value="Bowman-Oddy- Biology">Bowman-Oddy- Biology</option>
+              <option value="Bowman-Oddy- Chemistry">Bowman-Oddy- Chemistry</option>
+              <option value="Bowman-Oddy- Storeroom">Bowman-Oddy- Storeroom</option>
               <option value="Carlson Library">Carlson Library Circulation Desk</option>
               <option value="CPA">CPA</option>
               <option value="Field House">Field House</option>
@@ -289,8 +289,8 @@ export default function ItemForm({ type }) {
               <option value="Snyder">Snyder</option>
               <option value="Stranahan North/Savage Business">Stranahan North/Savage Business</option>
               <option value="Stranahan South">Stranahan South</option>
-              <option value="Student REC- Front">Student REC: Front Front Center</option>
-              <option value="Student Union/Rocket Copy">Student Union / Rocket Copy</option>
+              <option value="Student REC- Front">Student REC- Front Front Center</option>
+              <option value="Student Union/Rocket Copy">Student Union/Rocket Copy</option>
               <option value="Tucker/Eberly Center">Tucker/Eberly Center</option>
               <option value="University Hall">University Hall</option>
               <option value="Wolfe">Wolfe</option>
