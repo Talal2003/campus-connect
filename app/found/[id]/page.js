@@ -11,9 +11,9 @@ export default async function ItemDetail({ params }) {
         <h1 style={{ color: 'var(--primary-blue)', marginBottom: '1.5rem' }}>{item.title}</h1>
 
         {/* Gallery */}
-        {item.image_urls?.length > 0 && (
+        {item.image_url?.length > 0 && (
           <div style={{ display: 'flex', gap: '1rem', overflowX: 'auto', marginBottom: '1.5rem' }}>
-            {item.image_urls.map((url, index) => (
+            {item.image_url.map((url, index) => (
               <img
                 key={index}
                 src={url}
