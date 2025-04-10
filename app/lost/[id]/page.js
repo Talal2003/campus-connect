@@ -82,6 +82,10 @@ export default function ItemDetail({ params }) {
     }
   };
 
+  function capitalizeFirst(str) {
+    return str?.charAt(0).toUpperCase() + str?.slice(1);
+  }  
+
   return (
     <div className="container" style={{ maxWidth: '900px', margin: '2rem auto' }}>
       <div className="card" style={{ 
@@ -159,6 +163,7 @@ export default function ItemDetail({ params }) {
           </span>
         </h1>
 
+<<<<<<< HEAD
         {/* Main content area with side-by-side layout */}
         <div style={{ 
           display: 'grid', 
@@ -293,6 +298,15 @@ export default function ItemDetail({ params }) {
               <p style={{ lineHeight: '1.6' }}>{item.description}</p>
             </div>
           </div>
+=======
+        {/* Details */}
+        <div style={{ lineHeight: '1.8' }}>
+          <p><strong>Category:</strong> {capitalizeFirst(item.category)}</p>
+          <p><strong>Type:</strong> {capitalizeFirst(item.type)}</p> {/* Add if type should be shown */}
+          <p><strong>Description:</strong> {item.description}</p>
+          <p><strong>Location:</strong> {item.location}</p>
+          <p><strong>Date:</strong> {new Date(item.date).toLocaleDateString()}</p>
+>>>>>>> 90886b1f2f35efc41211f3c47a9a32e4352adff6
         </div>
 
         {/* Contact card - Full width below */}

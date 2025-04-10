@@ -94,19 +94,20 @@ export default function ItemForm({ type }) {
     'Ottawa East': 'Front Desk',
     'Ottawa West': 'Front Desk',
     'Parks Tower': 'Front Desk',
-    'President\'s Hall': 'Front Desk',
+    'Presidents Hall': 'Front Desk',
     'Rocket Hall': 'RSC 1200',
-    'Rocket Hall cmpt lab': 'Computer Lab',
+    'Rocket Hall Computer Lab': 'Computer Lab',
     'Savage Arena/Glass Bowl': 'Executive Assistant',
     'Snyder': 'Room 3000',
     'Stranahan North/Savage Business': 'Room 3130',
     'Stranahan South': 'Room 5017',
-    'Student REC- Front': 'Front Center',
-    'Student Union / Rocket Copy': 'Room 2525',
+    'Student REC': 'Front Desk',
+    'Student Union/Rocket Copy': 'Room 2525',
     'Tucker/Eberly Center': 'Room 168',
     'University Hall': 'Room 4260',
     'Wolfe': 'Room 1227',
-    'Health Science Campus': 'Mulford Library 007'
+    'Health Science Campus': 'Mulford Library 007',
+    'Other': 'Nearest UTPD location',
   };
   
   const dropOffInstructions = formData.building ? 
@@ -177,7 +178,11 @@ export default function ItemForm({ type }) {
         description: formData.description,
         location: formData.location || formData.building,
         building: formData.building,
+<<<<<<< HEAD
         room_number: formData.room_number,
+=======
+        dropoff_location: locationRoomMap[formData.building] || null,
+>>>>>>> 90886b1f2f35efc41211f3c47a9a32e4352adff6
         date: formData.date,
         contact_name: user.user_metadata?.username || 'User',
         contact_email: user.email,
@@ -199,6 +204,7 @@ export default function ItemForm({ type }) {
 
       console.log("Submitting item data:", itemData);
 
+<<<<<<< HEAD
       try {
         // Submit to Supabase
         const data = await createItem(itemData);
@@ -227,6 +233,28 @@ export default function ItemForm({ type }) {
         console.error("Error creating item:", createError);
         throw new Error(`Failed to create item: ${createError.message || 'Unknown error'}`);
       }
+=======
+      // Submit to Supabase
+      const data = await createItem(itemData);
+      
+      setSuccess(`Your ${type} item has been reported successfully. You can track its status on this page`);
+      
+      // Reset form after successful submission
+      setFormData({
+        title: '',
+        category: '',
+        description: '',
+        location: '',
+        date: '',
+        images: [],
+        building: ''
+      });
+      
+      // Redirect to track page after a delay
+      setTimeout(() => {
+        router.push(`/${type}`);
+      }, 3000);
+>>>>>>> 90886b1f2f35efc41211f3c47a9a32e4352adff6
       
     } catch (err) {
       setError(err.message || 'An error occurred while submitting the form. Please try again.');
@@ -333,27 +361,27 @@ export default function ItemForm({ type }) {
               <option value="Bowman-Oddy- Biology">Bowman-Oddy- Biology</option>
               <option value="Bowman-Oddy- Chemistry">Bowman-Oddy- Chemistry</option>
               <option value="Bowman-Oddy- Storeroom">Bowman-Oddy- Storeroom</option>
-              <option value="Carlson Library">Carlson Library Circulation Desk</option>
+              <option value="Carlson Library">Carlson Library</option>
               <option value="CPA">CPA</option>
               <option value="Field House">Field House</option>
               <option value="Gillham">Gillham</option>
               <option value="Health and Human Services">Health and Human Services</option>
-              <option value="Honors Academic Village">Honors Academic Village Front Desk</option>
+              <option value="Honors Academic Village">Honors Academic Village</option>
               <option value="Law Center">Law Center</option>
               <option value="McMaster">McMaster</option>
               <option value="Nitschke">Nitschke</option>
-              <option value="Ottawa East">Ottawa East Front Desk</option>
-              <option value="Ottawa West">Ottawa West Front Desk</option>
-              <option value="Parks Tower">Parks Tower Front Desk</option>
-              <option value="President\'s Hall">President\'s Hall Front Desk</option>
+              <option value="Ottawa East">Ottawa East</option>
+              <option value="Ottawa West">Ottawa West</option>
+              <option value="Parks Tower">Parks Tower</option>
+              <option value="Presidents Hall">Presidents Hall</option>
               <option value="Rocket Hall">Rocket Hall</option>
-              <option value="Rocket Hall cmpt lab">Rocket Hall cmpt lab Computer Lab</option>
-              <option value="Savage Arena/Glass Bowl">Savage Arena/Glass Bowl Executive Assistant</option>
+              <option value="Rocket Hall Computer lab">Rocket Hall Computer Lab</option>
+              <option value="Savage Arena/Glass Bowl">Savage Arena/Glass Bowl</option>
               <option value="Snyder">Snyder</option>
               <option value="Stranahan North/Savage Business">Stranahan North/Savage Business</option>
               <option value="Stranahan South">Stranahan South</option>
-              <option value="Student REC- Front">Student REC- Front Front Center</option>
-              <option value="Student Union / Rocket Copy">Student Union / Rocket Copy</option>
+              <option value="Student REC">Student REC</option>
+              <option value="Student Union/Rocket Copy">Student Union/Rocket Copy</option>
               <option value="Tucker/Eberly Center">Tucker/Eberly Center</option>
               <option value="University Hall">University Hall</option>
               <option value="Wolfe">Wolfe</option>
