@@ -14,20 +14,6 @@ export default function ItemCard({ item }) {
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       }}>
-        <div style={{ 
-          position: 'absolute', 
-          top: '0.5rem', 
-          right: '0.5rem',
-          backgroundColor: type === 'lost' ? 'var(--danger)' : 'var(--primary-yellow)',
-          color: type === 'lost' ? 'white' : 'var(--primary-blue)',
-          padding: '0.25rem 0.5rem',
-          borderRadius: '0.25rem',
-          fontWeight: 'bold',
-          fontSize: '0.75rem',
-          textTransform: 'uppercase'
-        }}>
-          {type}
-        </div>
       </div>
       
       <div style={{ padding: '1rem' }}>

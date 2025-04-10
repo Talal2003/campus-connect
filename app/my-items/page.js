@@ -58,19 +58,6 @@ export default function MyItemsPage() {
                 style={{ objectFit: 'cover' }}
               />
             )}
-            <div style={{
-              position: 'absolute',
-              top: '0.5rem',
-              right: '0.5rem',
-              backgroundColor: 'var(--primary-yellow)',
-              color: 'var(--primary-blue)',
-              padding: '0.25rem 0.5rem',
-              borderRadius: '0.25rem',
-              fontWeight: 'bold',
-              fontSize: '0.75rem'
-            }}>
-              {type.toUpperCase()}
-            </div>
           </div>
           <div style={{ padding: '1rem' }}>
             <h3 style={{ marginBottom: '0.5rem', fontSize: '1.1rem' }}>{item.title}</h3>
@@ -101,7 +88,7 @@ export default function MyItemsPage() {
       <section style={{ marginBottom: '4rem' }}>
         <h2 style={{ marginBottom: '1.5rem', color: 'var(--primary-blue)' }}>Lost Items</h2>
         {lostItems.length === 0 ? (
-          <p>You haven’t reported any lost items.</p>
+          <p>You haven't reported any lost items.</p>
         ) : (
           renderItemGrid(lostItems, 'lost')
         )}
@@ -110,7 +97,7 @@ export default function MyItemsPage() {
       <section>
         <h2 style={{ marginBottom: '1.5rem', color: 'var(--primary-blue)' }}>Found Items</h2>
         {foundItems.length === 0 ? (
-          <p>You haven’t reported any found items.</p>
+          <p>You haven't reported any found items.</p>
         ) : (
           renderItemGrid(foundItems, 'found')
         )}

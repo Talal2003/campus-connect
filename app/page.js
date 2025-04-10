@@ -184,19 +184,6 @@ export default function Home() {
                       style={{ objectFit: 'cover' }} 
                     />
                   ) : null}
-                  <div style={{ 
-                    position: 'absolute', 
-                    top: '0.5rem', 
-                    right: '0.5rem',
-                    backgroundColor: 'var(--primary-yellow)',
-                    color: 'var(--primary-blue)',
-                    padding: '0.25rem 0.5rem',
-                    borderRadius: '0.25rem',
-                    fontWeight: 'bold',
-                    fontSize: '0.75rem'
-                  }}>
-                    FOUND
-                  </div>
                 </div>
                 <div style={{ padding: '1rem' }}>
                   <h3 style={{ marginBottom: '0.5rem', fontSize: '1.1rem' }}>{item.title}</h3>

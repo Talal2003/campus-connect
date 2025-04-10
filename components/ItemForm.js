@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../lib/auth/authContext';
 import { createItem } from '../lib/db';
 import { createClient } from '@supabase/supabase-js';
@@ -13,6 +13,7 @@ const supabase = createClient(
 
 export default function ItemForm({ type }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user } = useAuth();
   const [formData, setFormData] = useState({
     title: '',
@@ -21,8 +22,57 @@ export default function ItemForm({ type }) {
     location: '',
     date: '',
     images: [],
-    building: ''
+    building: '',
+    room_number: '',
+    reference_id: ''
   });
+  
+  // Effect to load query parameters when component mounts
+  useEffect(() => {
+    if (searchParams) {
+      // Log all available search params for debugging
+      console.log('All search params:', Object.fromEntries([...searchParams.entries()]));
+      
+      const title = searchParams.get('title') || '';
+      const category = searchParams.get('category') || '';
+      const description = searchParams.get('description') || '';
+      const location = searchParams.get('location') || '';
+      const date = searchParams.get('date') || '';
+      const room_number = searchParams.get('room_number') || '';
+      const image_url = searchParams.get('image_url') || '';
+      const reference_id = searchParams.get('reference_id') || '';
+      
+      // Format date properly if it exists
+      let formattedDate = '';
+      if (date) {
+        try {
+          formattedDate = new Date(date).toISOString().split('T')[0];
+        } catch (err) {
+          console.error('Error formatting date:', err);
+          formattedDate = '';
+        }
+      }
+      
+      // Pre-fill form data from query parameters
+      setFormData(prev => ({
+        ...prev,
+        title,
+        category,
+        description,
+        location,
+        // Also set building to location for dropdown
+        building: location,
+        date: formattedDate,
+        room_number,
+        reference_id,
+        image_url
+      }));
+      
+      console.log('Pre-filled form with query parameters:', {
+        title, category, description, location, date: formattedDate, room_number, reference_id, image_url
+      });
+    }
+  }, [searchParams]);
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -127,43 +177,56 @@ export default function ItemForm({ type }) {
         description: formData.description,
         location: formData.location || formData.building,
         building: formData.building,
+        room_number: formData.room_number,
         date: formData.date,
         contact_name: user.user_metadata?.username || 'User',
         contact_email: user.email,
         contact_phone: '', // No longer collecting phone number
-        image_url: null, // Why not?
+        image_url: formData.image_url || null, // Use pre-filled image if available
         user_id: user.id, // This is now a UUID from Supabase
         status: 'pending'
       };
 
       const itemId = crypto.randomUUID(); // or use any ID scheme you like
-      const imageUrls = await uploadImagesToSupabase(formData.images, itemId);
-      itemData.image_url = imageUrls[0] || null; // or store all if DB allows array
-      //itemData.image_urls = imageUrls; // optional for multiple images
+      
+      // Only upload new images if they were selected
+      if (formData.images && formData.images.length > 0) {
+        const imageUrls = await uploadImagesToSupabase(formData.images, itemId);
+        itemData.image_url = imageUrls[0] || formData.image_url || null; // Use uploaded image first, then pre-filled, then null
+      }
+      
       itemData.id = itemId; // optional: only if you're assigning IDs manually
 
       console.log("Submitting item data:", itemData);
 
-      // Submit to Supabase
-      const data = await createItem(itemData);
-      
-      setSuccess(`Your ${type} item has been reported successfully. You can track its status using the reference number: ${data.reference_number}`);
-      
-      // Reset form after successful submission
-      setFormData({
-        title: '',
-        category: '',
-        description: '',
-        location: '',
-        date: '',
-        images: [],
-        building: ''
-      });
-      
-      // Redirect to track page after a delay
-      setTimeout(() => {
-        router.push(`/${type}`);
-      }, 3000);
+      try {
+        // Submit to Supabase
+        const data = await createItem(itemData);
+        console.log("Create item response:", data);
+        
+        setSuccess(`Your ${type} item has been reported successfully.`);
+        
+        // Reset form after successful submission
+        setFormData({
+          title: '',
+          category: '',
+          description: '',
+          location: '',
+          date: '',
+          images: [],
+          building: '',
+          room_number: '',
+          reference_id: ''
+        });
+        
+        // Redirect to track page after a delay
+        setTimeout(() => {
+          router.push(`/${type}`);
+        }, 3000);
+      } catch (createError) {
+        console.error("Error creating item:", createError);
+        throw new Error(`Failed to create item: ${createError.message || 'Unknown error'}`);
+      }
       
     } catch (err) {
       setError(err.message || 'An error occurred while submitting the form. Please try again.');
@@ -311,22 +374,6 @@ export default function ItemForm({ type }) {
               required
             />
           </div>
-          
-          <div className="form-group">
-            <label htmlFor="images">Images (Optional)</label>
-            <input
-              type="file"
-              id="images"
-              name="images"
-              className="form-control"
-              accept="image/*"
-              multiple
-              onChange={handleImageChange}
-            />
-            <small style={{ display: 'block', marginTop: '0.5rem', color: 'var(--dark-gray)' }}>
-              Upload images of the item to help with identification.
-            </small>
-          </div>
         </div>
         
         {type === 'found' && (
@@ -335,6 +382,44 @@ export default function ItemForm({ type }) {
             <p>{dropOffInstructions}</p>
           </div>
         )}
+        
+        <div style={{ marginBottom: '1.5rem' }}>
+          <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem' }}>Upload Image</h3>
+          
+          {/* Display pre-filled image if available */}
+          {formData.image_url && (
+            <div style={{ marginBottom: '1rem' }}>
+              <p>Current image from the reference item:</p>
+              <img 
+                src={formData.image_url} 
+                alt="Reference item" 
+                style={{ 
+                  maxWidth: '100%', 
+                  maxHeight: '200px', 
+                  borderRadius: '4px',
+                  marginBottom: '1rem' 
+                }} 
+              />
+              <p style={{ fontSize: '0.9rem', color: '#666' }}>
+                You can keep this image or upload a new one below.
+              </p>
+            </div>
+          )}
+          
+          <div className="form-group">
+            <label htmlFor="images">Upload Photos (Optional)</label>
+            <input
+              type="file"
+              id="images"
+              name="images"
+              className="form-control"
+              onChange={handleImageChange}
+              accept="image/*"
+              multiple
+            />
+            <small>Upload clear photos of the item to help with identification.</small>
+          </div>
+        </div>
         
         <button 
           type="submit" 

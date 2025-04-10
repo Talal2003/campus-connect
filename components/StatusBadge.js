@@ -4,17 +4,25 @@ export default function StatusBadge({ status }) {
   
   switch (status) {
     case 'found':
-      badgeClass += 'badge-success';
+      badgeClass += 'badge-info';
+      label = 'Available for Pickup';
       break;
     case 'claimed':
       badgeClass += 'badge-success';
+      label = 'Claimed by Owner';
       break;
     case 'delivered':
       badgeClass += 'badge-info';
-      label = 'At UTPD';
+      label = 'Returned to Owner';
       break;
     case 'pending':
-      badgeClass += 'badge-warning';
+      if (document.location.pathname.includes('/found')) {
+        badgeClass += 'badge-warning';
+        label = 'Recently Found';
+      } else {
+        badgeClass += 'badge-danger';
+        label = 'Still Lost';
+      }
       break;
     case 'lost':
       badgeClass += 'badge-danger';

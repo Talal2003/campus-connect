@@ -38,13 +38,13 @@ export default function Navbar() {
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center',
-        padding: '1rem 0'
+        padding: '0rem 0'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <img 
             src="toledo.png"
             alt="UT logo"
-            style={{ height: '70px', width: 'auto', transform: 'translateY(6px)' }}
+            style={{ height: '80px', width: 'auto', transform: 'translateY(0)' }}
           />
           <Link href="/" style={{ color: 'white', fontSize: '1.5rem', fontWeight: 'bold', textDecoration: 'none' }}>
             <span style={{ color: 'var(--primary-yellow)' }}>UT</span> Campus Connect
@@ -136,7 +136,7 @@ export default function Navbar() {
             display: ${isMenuOpen ? 'flex' : 'none'} !important;
             flex-direction: column;
             position: absolute;
-            top: 60px;
+            top: 70px;
             left: 0;
             right: 0;
             background-color: var(--primary-blue);

@@ -11,6 +11,7 @@ export default function FoundItemsPage() {
   const [filteredItems, setFilteredItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isAiSearchActive, setIsAiSearchActive] = useState(false);
   
   useEffect(() => {
     const fetchItems = async () => {
@@ -80,6 +81,35 @@ export default function FoundItemsPage() {
     setFilteredItems(filtered);
   };
   
+  const handleAiSearchResults = (results) => {
+    if (!results || results.length === 0) {
+      setError("No similar items found. Try a different image.");
+      return;
+    }
+    
+    setIsAiSearchActive(true);
+    
+    // Get item IDs from AI search results
+    const itemIds = results.map(result => result.id);
+    
+    // Filter items by the IDs returned from AI search
+    const aiFilteredItems = items.filter(item => itemIds.includes(item.id));
+    
+    // Sort according to similarity scores from AI
+    const sortedItems = aiFilteredItems.sort((a, b) => {
+      const aResult = results.find(r => r.id === a.id);
+      const bResult = results.find(r => r.id === b.id);
+      return (bResult?.similarity || 0) - (aResult?.similarity || 0);
+    });
+    
+    setFilteredItems(sortedItems);
+  };
+  
+  const clearAiSearch = () => {
+    setIsAiSearchActive(false);
+    setFilteredItems(items);
+  };
+  
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
@@ -89,7 +119,40 @@ export default function FoundItemsPage() {
         </Link>
       </div>
       
-      <SearchBox onSearch={handleSearch} onFilterChange={handleFilterChange} />
+      <SearchBox 
+        onSearch={handleSearch} 
+        onFilterChange={handleFilterChange}
+        onAiSearchResults={handleAiSearchResults}
+      />
+      
+      {isAiSearchActive && (
+        <div style={{ 
+          backgroundColor: '#e3f2fd', 
+          padding: '1rem', 
+          marginBottom: '1rem', 
+          borderRadius: '5px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <p style={{ margin: 0 }}>
+            <strong>AI Search Active:</strong> Showing items similar to your uploaded image
+          </p>
+          <button
+            onClick={clearAiSearch}
+            style={{
+              padding: '0.5rem',
+              backgroundColor: 'transparent',
+              border: 'none',
+              color: 'var(--primary-blue)',
+              cursor: 'pointer',
+              fontWeight: 'bold'
+            }}
+          >
+            Clear Results
+          </button>
+        </div>
+      )}
       
       {isLoading ? (
         <div style={{ textAlign: 'center', padding: '3rem 0' }}>
