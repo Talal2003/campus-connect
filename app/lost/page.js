@@ -83,7 +83,7 @@ export default function LostItemsPage() {
   
   const handleAiSearchResults = (results) => {
     if (!results || results.length === 0) {
-      setError("No similar items found. Try a different image.");
+      setError("No similar items found or AI search is disabled. Using regular search instead.");
       return;
     }
     

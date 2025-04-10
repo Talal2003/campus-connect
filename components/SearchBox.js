@@ -7,6 +7,14 @@ export default function SearchBox({ onSearch, onFilterChange, onAiSearchResults 
   const [isAiSearching, setIsAiSearching] = useState(false);
   const [aiError, setAiError] = useState('');
   const fileInputRef = useRef(null);
+  const [isAiAvailable, setIsAiAvailable] = useState(true);
+  
+  // Check if AI search feature is available (API key present)
+  useEffect(() => {
+    if (!process.env.NEXT_PUBLIC_OPENAI_API_KEY) {
+      setIsAiAvailable(false);
+    }
+  }, []);
 
   // Search on every keystroke
   useEffect(() => {
@@ -33,6 +41,11 @@ export default function SearchBox({ onSearch, onFilterChange, onAiSearchResults 
         
         // Perform AI image comparison
         const results = await compareImageWithDatabase(imageFile);
+        
+        if (results.length === 0) {
+          setAiError('No similar items found or AI search is not available.');
+          return;
+        }
         
         // Pass results to parent component
         if (onAiSearchResults) {
@@ -83,22 +96,41 @@ export default function SearchBox({ onSearch, onFilterChange, onAiSearchResults 
           <option value="other">Other</option>
         </select>
         
-        <button 
-          onClick={handleFileSelect}
-          disabled={isAiSearching}
-          style={{
-            padding: '0.5rem 1rem',
-            backgroundColor: isAiSearching ? '#ccc' : 'var(--accent-color, #6c5ce7)',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: isAiSearching ? 'not-allowed' : 'pointer',
-            whiteSpace: 'nowrap',
-            fontWeight: 'bold'
-          }}
-        >
-          {isAiSearching ? 'Searching...' : 'Search with AI'}
-        </button>
+        {isAiAvailable ? (
+          <button 
+            onClick={handleFileSelect}
+            disabled={isAiSearching}
+            style={{
+              padding: '0.5rem 1rem',
+              backgroundColor: isAiSearching ? '#ccc' : 'var(--accent-color, #6c5ce7)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: isAiSearching ? 'not-allowed' : 'pointer',
+              whiteSpace: 'nowrap',
+              fontWeight: 'bold'
+            }}
+          >
+            {isAiSearching ? 'Searching...' : 'Search with AI'}
+          </button>
+        ) : (
+          <button 
+            disabled={true}
+            title="AI search is not available - API key missing"
+            style={{
+              padding: '0.5rem 1rem',
+              backgroundColor: '#ccc',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'not-allowed',
+              whiteSpace: 'nowrap',
+              fontWeight: 'bold'
+            }}
+          >
+            AI Search Disabled
+          </button>
+        )}
         
         <input 
           type="file" 
