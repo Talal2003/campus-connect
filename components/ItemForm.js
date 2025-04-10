@@ -178,11 +178,8 @@ export default function ItemForm({ type }) {
         description: formData.description,
         location: formData.location || formData.building,
         building: formData.building,
-<<<<<<< HEAD
         room_number: formData.room_number,
-=======
         dropoff_location: locationRoomMap[formData.building] || null,
->>>>>>> 90886b1f2f35efc41211f3c47a9a32e4352adff6
         date: formData.date,
         contact_name: user.user_metadata?.username || 'User',
         contact_email: user.email,
@@ -204,13 +201,12 @@ export default function ItemForm({ type }) {
 
       console.log("Submitting item data:", itemData);
 
-<<<<<<< HEAD
       try {
         // Submit to Supabase
         const data = await createItem(itemData);
         console.log("Create item response:", data);
         
-        setSuccess(`Your ${type} item has been reported successfully.`);
+        setSuccess(`Your ${type} item has been reported successfully. You can track its status on this page`);
         
         // Reset form after successful submission
         setFormData({
@@ -220,9 +216,7 @@ export default function ItemForm({ type }) {
           location: '',
           date: '',
           images: [],
-          building: '',
-          room_number: '',
-          reference_id: ''
+          building: ''
         });
         
         // Redirect to track page after a delay
@@ -233,28 +227,6 @@ export default function ItemForm({ type }) {
         console.error("Error creating item:", createError);
         throw new Error(`Failed to create item: ${createError.message || 'Unknown error'}`);
       }
-=======
-      // Submit to Supabase
-      const data = await createItem(itemData);
-      
-      setSuccess(`Your ${type} item has been reported successfully. You can track its status on this page`);
-      
-      // Reset form after successful submission
-      setFormData({
-        title: '',
-        category: '',
-        description: '',
-        location: '',
-        date: '',
-        images: [],
-        building: ''
-      });
-      
-      // Redirect to track page after a delay
-      setTimeout(() => {
-        router.push(`/${type}`);
-      }, 3000);
->>>>>>> 90886b1f2f35efc41211f3c47a9a32e4352adff6
       
     } catch (err) {
       setError(err.message || 'An error occurred while submitting the form. Please try again.');
